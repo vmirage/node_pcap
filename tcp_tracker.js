@@ -1,6 +1,7 @@
 var EventEmitter = require("events").EventEmitter;
 var inherits = require("util").inherits;
 var IPv4 = require("./decode/ipv4");
+var IPv6 = require("./decode/ipv6");
 var TCP = require("./decode/tcp");
 
 function TCPTracker() {
@@ -12,7 +13,7 @@ inherits(TCPTracker, EventEmitter);
 TCPTracker.prototype.track_packet = function (packet) {
     var ip, tcp, src, dst, key, session;
 
-    if (packet.payload.payload instanceof IPv4 && packet.payload.payload.payload instanceof TCP) {
+    if ((packet.payload.payload instanceof IPv4 || packet.payload.payload instanceof IPv6) && packet.payload.payload.payload instanceof TCP) {
         ip  = packet.payload.payload;
         tcp = ip.payload;
         src = ip.saddr + ":" + tcp.sport;
